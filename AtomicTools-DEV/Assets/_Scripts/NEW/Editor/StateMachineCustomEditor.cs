@@ -18,6 +18,7 @@ namespace AtomicTools
         SerializedProperty stateTransitions;
 
         private string[] emptySettings = new string[] { "Choose a settings asset." };
+        private string[] noStartOverride = new string[] { "Enabled override to choose." };
 
         private void OnEnable()
         {
@@ -46,20 +47,33 @@ namespace AtomicTools
                 settings_cache = machine.GetSettings();
             }
 
-            EditorGUILayout.PropertyField(settings, true);
-            if(settings.objectReferenceValue != null)
+            EditorGUILayout.LabelField("SETTINGS", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Settings Asset");
+            EditorGUILayout.ObjectField(settings.objectReferenceValue, typeof(ATStateMachineSettings), false);
+            EditorGUILayout.EndHorizontal();
+
+            if (settings.objectReferenceValue != null)
             {
                 EditorGUILayout.PropertyField(uniqueBehavior);
                 EditorGUILayout.PropertyField(initOnAwake);
                 EditorGUILayout.Space();
+                EditorGUILayout.LabelField("STATE MACHINE", EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(overrideStartingState);
                 if(overrideStartingState.boolValue)
                 {
-                    EditorGUI.indentLevel++;
+                    //EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(startingState);
-                    EditorGUI.indentLevel--;
+                    //EditorGUI.indentLevel--;
                 }
-                //EditorGUILayout.PropertyField(stateTransitions);
+                else
+                {
+                    GUI.enabled = false;
+                    EditorGUILayout.Popup(0, noStartOverride);
+                    GUI.enabled= true;
+                }
+                EditorGUILayout.EndHorizontal();
                 if (GUILayout.Button("Open Transitions Menu")) StateTransitionsWindow.ShowWindow(machine, stateTransitions);
             }
 

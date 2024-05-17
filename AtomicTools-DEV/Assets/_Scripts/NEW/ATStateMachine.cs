@@ -16,12 +16,12 @@ namespace AtomicTools
     [System.Serializable]
     public class ATStateMachine : MonoBehaviour
     {
-        [Header("SETTINGS")]
+        //[Header("SETTINGS")]
         [SerializeField] private ATStateMachineSettings _settings;
         [Tooltip("All unique behavior methods should be in this script.")][SerializeField] private ATStateMachineBehavior _uniqueBehavior;
         [Tooltip("If this is checked, the state transitions will automatically re-initialize on awake.")][SerializeField] private bool _initTransitionsOnAwake = true;
 
-        [Header("State Machine")]
+        //[Header("State Machine")]
         [Tooltip("Default starting state is index 0. Check this to use a different starting state.")][SerializeField] private bool _overrideStartingState = false;
         [Tooltip("The state to start in. Only applies if previous option is checked.")][SerializeField] private ATState _startingState;
         [SerializeField] private List<ATStateTransition> _stateTransitions;
@@ -74,8 +74,8 @@ namespace AtomicTools
                         _collisionTransitions.Add(i);
                         break;
                     case TransitionType.Timer:
-                        foreach (int frm in _stateTransitions[i].fromState)
-                            _timerTransitions[(int)frm].Add(i);   // [TODO] REDO THIS
+                        foreach (ATState frm in _stateTransitions[i].fromState)
+                            _timerTransitions[frm.state].Add(i);   // [TODO] REDO THIS
                         break;
                     default:
                         Debug.LogError("Transition index " + i + ": invalid transition type");
@@ -225,9 +225,9 @@ namespace AtomicTools
             return _settings;
         }
 
-        public int GetCurrentState()
+        public ATState GetCurrentState()
         {
-            return _state.state;
+            return _state;
         }
 
         public void SetState(int newState)

@@ -14,11 +14,11 @@ namespace AtomicTools
     public struct ATTransitionCondition
     {
         public ConditionType conditionType;
-        //[TagSelector]
+        [TagSelector]
         [Tooltip("An object with one of these tags must be within the trigger for the condition to pass")] public List<string> tagsInTrigger;
-        //[TagSelector]
+        [TagSelector]
         [Tooltip("An object with one of these tags must be in collision for the condition to pass")] public List<string> tagsInCollision;
-        //[TagSelector]
+        [TagSelector]
         [Tooltip("The method that performs the comparison. Must return a boolean with whether the comparison passed.")] public string customComparisonMethod;
 
         public bool EvaluateCondition(ATStateMachine sourceref)

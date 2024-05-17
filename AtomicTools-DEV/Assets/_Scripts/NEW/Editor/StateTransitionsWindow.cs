@@ -8,10 +8,9 @@ namespace AtomicTools
 {
     public class StateTransitionsWindow : EditorWindow
     {
-        private static SerializedProperty translist;
+        private static SerializedProperty transitionList;
 
         private static ATStateMachine sm;
-        //private static List<ATStateTransition> transitions;
         private static StateTransitionsWindow window = null;
         private Vector2 scrollPos = new Vector2(0,0);
         public static void ShowWindow(ATStateMachine machine, SerializedProperty transitions)
@@ -22,7 +21,7 @@ namespace AtomicTools
             //sm = machine;
             //transitions = sm.GetTransitionsList();
             sm = machine;
-            translist = transitions;
+            transitionList = transitions;
         }
 
         private void OnEnable()
@@ -32,18 +31,22 @@ namespace AtomicTools
 
         private void OnGUI()
         {
-            EditorGUILayout.PropertyField(translist);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save"))
+            try
             {
-                //sm.OverwriteTransitionsList(translist);
-                Debug.Log("SAVE");
+                EditorGUILayout.PropertyField(transitionList, true);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Save"))
+                {
+                    //sm.OverwriteTransitionsList(translist);
+                    Debug.Log("SAVE");
+                }
+                if (GUILayout.Button("Exit"))
+                {
+                    Close();
+                }
+                GUILayout.EndHorizontal();
             }
-            if(GUILayout.Button("Exit"))
-            {
-                Close();
-            }
-            GUILayout.EndHorizontal();
+            catch { Close(); }
         }
     }
 

@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.ShaderKeywordFilter;
 
 namespace AtomicTools
 {
@@ -20,7 +18,7 @@ namespace AtomicTools
 
         SerializedProperty transitionType;
         SerializedProperty transitionConditions;
-        SerializedProperty transitionConditionEvaluation;
+        SerializedProperty conditionEvaluation;
         SerializedProperty fromState;
         SerializedProperty toState;
         SerializedProperty successMethodName;
@@ -44,7 +42,7 @@ namespace AtomicTools
             // Get properties
             transitionType = property.FindPropertyRelative("transitionType");
             transitionConditions = property.FindPropertyRelative("transitionConditions");
-            transitionConditionEvaluation = property.FindPropertyRelative("transitionConditionEvaluation");
+            conditionEvaluation = property.FindPropertyRelative("conditionEvaluation");
             fromState = property.FindPropertyRelative("fromState");
             toState = property.FindPropertyRelative("toState");
             successMethodName = property.FindPropertyRelative("successMethodName");
@@ -57,9 +55,17 @@ namespace AtomicTools
             timerLength = property.FindPropertyRelative("timerLength");
 
             // Get names of behavior methods
-            objref = (ATStateMachine)property.serializedObject.targetObject;
-            methodNames = new List<string>(objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames());
-            methodNames.Insert(0, "None");
+            try
+            {
+                objref = (ATStateMachine)property.serializedObject.targetObject;
+                methodNames = new List<string>(objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames());
+                methodNames.Insert(0, "None");
+            }
+            catch
+            {
+                objref = null;
+                methodNames = new List<string>();
+            }
 
             // for formatting
             boldFoldout.fontStyle = FontStyle.Bold;
@@ -70,24 +76,25 @@ namespace AtomicTools
             GetProperties(property);
 
             EditorGUI.BeginProperty(position, label, property);
-            menuOpen.boolValue = EditorGUI.Foldout(new Rect(3, 3, position.width - 6, 15), menuOpen.boolValue, typestr + labelstr, boldFoldout);
+            menuOpen.boolValue = EditorGUI.Foldout(new Rect(position.x + 3, position.y + 3, position.width - 6, 15), menuOpen.boolValue, typestr + labelstr, boldFoldout);
 
 
             typestr = transitionType.enumDisplayNames[transitionType.enumValueIndex];
 
             if (menuOpen.boolValue)
             {
+                EditorGUI.indentLevel++;
                 // Draw inspector
                 EditorGUILayout.PropertyField(transitionType);
 
-                if (transitionType.enumValueIndex == 2) // TriggerEnterTag index
+                if (transitionType.enumValueIndex == 0) // TriggerEnterTag index
                     EditorGUILayout.PropertyField(triggerEnterTags);
-                if (transitionType.enumValueIndex == 3) // CollisionTag index
+                if (transitionType.enumValueIndex == 1) // CollisionTag index
                     EditorGUILayout.PropertyField(collisionTags);
-                if (transitionType.enumValueIndex == 4) // Timer index
+                if (transitionType.enumValueIndex == 2) // Timer index
                     EditorGUILayout.PropertyField(timerLength);
 
-                EditorGUILayout.PropertyField(transitionConditionEvaluation);
+                EditorGUILayout.PropertyField(conditionEvaluation);
                 EditorGUILayout.PropertyField(transitionConditions);
                 EditorGUILayout.PropertyField(fromState);
                 EditorGUILayout.PropertyField(toState);
@@ -108,6 +115,7 @@ namespace AtomicTools
                     GUI.enabled = true;
                 }
                 EditorGUILayout.EndHorizontal();
+                EditorGUI.indentLevel--;
             }
             EditorGUI.EndProperty();
         }
@@ -119,7 +127,7 @@ namespace AtomicTools
         private static float lineHeight = EditorGUIUtility.singleLineHeight;
 
         private ATStateMachine objref;
-        private List<string> methodNames;
+        private List<string> methodNames = new List<string>();
 
         private string[] emptyNames = new string[] { "Link behavior script to choose comparison method." };
         private int comparisonMethodIndex = 0;
@@ -141,14 +149,23 @@ namespace AtomicTools
             conditionType = property.FindPropertyRelative("conditionType");
 
             // Conditional properties
-            tagsInTrigger = property.FindPropertyRelative("attributesInTrigger");
-            tagsInCollision = property.FindPropertyRelative("attributesInCollision");
+            tagsInTrigger = property.FindPropertyRelative("tagsInTrigger");
+            tagsInCollision = property.FindPropertyRelative("tagsInCollision");
             customComparison = property.FindPropertyRelative("customComparisonMethod");
 
             // Get behavior method names
-            objref = (ATStateMachine)property.serializedObject.targetObject;
-            methodNames = new List<string>(objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames());
-            methodNames.Insert(0, "None");
+            try
+            {
+                objref = (ATStateMachine)property.serializedObject.targetObject;
+                methodNames = objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames();
+                methodNames.Insert(0, "None");
+            }
+            catch
+            {
+                if (methodNames.Count > 0)
+                    methodNames.Clear();
+            }
+            
 
             // Draw inspector
             EditorGUI.PropertyField(typeRect, conditionType);
@@ -183,8 +200,8 @@ namespace AtomicTools
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             conditionType = property.FindPropertyRelative("conditionType");
-            tagsInTrigger = property.FindPropertyRelative("_tagsInTrigger");
-            tagsInCollision = property.FindPropertyRelative("_tagsInCollision");
+            tagsInTrigger = property.FindPropertyRelative("tagsInTrigger");
+            tagsInCollision = property.FindPropertyRelative("tagsInCollision");
 
             float extraLines = 0;
 

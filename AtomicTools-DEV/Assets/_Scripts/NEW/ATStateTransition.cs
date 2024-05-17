@@ -16,11 +16,11 @@ namespace AtomicTools
 
         [Header("CONDITIONS:")]
         [Tooltip("The rule under which to evaluate whether this transition can succeed.")]
-        public TransitionConditionEvaluation transitionConditionEvaluation;
+        public TransitionConditionEvaluation conditionEvaluation;
         public List<ATTransitionCondition> transitionConditions;
 
         [Header("STATES:")]
-        [Tooltip("States from which this transition can occur.")] public List<int> fromState; // Make this a multiselect box?
+        [Tooltip("States from which this transition can occur.")] public List<ATState> fromState;
         [Tooltip("The state that the object will be in when this transition occurs successfully.")] public ATState toState;
 
         // Optional fields
@@ -49,12 +49,12 @@ namespace AtomicTools
             // this looks confusing but it's not trust me
             foreach (ATTransitionCondition condition in transitionConditions)
             {
-                if (transitionConditionEvaluation == TransitionConditionEvaluation.AllTrue && !condition.EvaluateCondition(sourceref))
+                if (conditionEvaluation == TransitionConditionEvaluation.AllTrue && !condition.EvaluateCondition(sourceref))
                     return false;
-                else if (transitionConditionEvaluation == TransitionConditionEvaluation.AnyTrue && condition.EvaluateCondition(sourceref))
+                else if (conditionEvaluation == TransitionConditionEvaluation.AnyTrue && condition.EvaluateCondition(sourceref))
                     return true;
             }
-            return transitionConditionEvaluation == TransitionConditionEvaluation.AllTrue;
+            return conditionEvaluation == TransitionConditionEvaluation.AllTrue;
         }
 
         // ONLY FOR EDITOR USAGE

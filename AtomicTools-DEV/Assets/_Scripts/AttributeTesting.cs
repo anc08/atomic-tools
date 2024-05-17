@@ -5,14 +5,6 @@ using UnityEngine;
 
 public class AttributeTesting : MonoBehaviour
 {
-    //const string[] x = { "hi", "bye" };
-    [SerializeField] ATStateMachineSettings _settings;
-    List<string> _options;
+    public ATStateTransition transition;
 
-    public ATState state;
-
-    private void OnValidate()
-    {
-        state.settings = _settings;
-    }
 }

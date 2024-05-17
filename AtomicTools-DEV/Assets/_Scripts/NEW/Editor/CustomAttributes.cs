@@ -87,17 +87,20 @@ public class ATStateDrawer : PropertyDrawer
 
     void GetValues(SerializedProperty property)
     {
-        //settings = ((GameObject)property.serializedObject.targetObject).GetComponent<ATStateMachine>().GetSettings();
-        settings = ((ATStateMachine)property.serializedObject.targetObject).GetSettings();
-        state = property.FindPropertyRelative("state");
-        if(settings != null)
+        try
         {
+            settings = ((ATStateMachine)property.serializedObject.targetObject).GetSettings();
             if (options == null || settings_cache != settings)
             {
                 options = settings.GetStates().ToArray();
                 settings_cache = settings;
             }
         }
+        catch
+        {
+
+        }
+        state = property.FindPropertyRelative("state");
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -108,6 +111,15 @@ public class ATStateDrawer : PropertyDrawer
             EditorGUI.BeginProperty(position, label, property);
             state.intValue = EditorGUI.Popup(position, state.intValue, options);
             EditorGUI.EndProperty();
+        }
+        else
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUI.LabelField(position, label.text);
+            Rect halfpos = new Rect(position.x + position.width / 2, position.y, position.width / 2, position.height);
+            state.intValue = EditorGUI.IntField(halfpos, state.intValue);
+            //EditorGUI.PropertyField(position, property);
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
