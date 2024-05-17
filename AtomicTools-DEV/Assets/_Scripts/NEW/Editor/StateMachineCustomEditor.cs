@@ -46,7 +46,7 @@ namespace AtomicTools
                 settings_cache = machine.GetSettings();
             }
 
-            EditorGUILayout.PropertyField(settings);
+            EditorGUILayout.PropertyField(settings, true);
             if(settings.objectReferenceValue != null)
             {
                 EditorGUILayout.PropertyField(uniqueBehavior);
@@ -59,7 +59,8 @@ namespace AtomicTools
                     EditorGUILayout.PropertyField(startingState);
                     EditorGUI.indentLevel--;
                 }
-                EditorGUILayout.PropertyField(stateTransitions);
+                //EditorGUILayout.PropertyField(stateTransitions);
+                if (GUILayout.Button("Open Transitions Menu")) StateTransitionsWindow.ShowWindow(machine, stateTransitions);
             }
 
             serializedObject.ApplyModifiedProperties();

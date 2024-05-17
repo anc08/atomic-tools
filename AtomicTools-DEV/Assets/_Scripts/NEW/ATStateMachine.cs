@@ -266,6 +266,15 @@ namespace AtomicTools
             return _behaviorMethods;
         }
 
+        public List<ATStateTransition> GetTransitionsList()
+        {
+            return _stateTransitions;
+        }
+
+        public void OverwriteTransitionsList(List<ATStateTransition> newlist)
+        {
+            _stateTransitions = newlist;
+        }
 
     }
 }
