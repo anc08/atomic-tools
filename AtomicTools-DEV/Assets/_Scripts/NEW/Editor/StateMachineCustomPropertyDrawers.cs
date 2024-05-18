@@ -13,7 +13,7 @@ namespace AtomicTools
         string typestr = "[CHOOSE]";
 
         private ATStateMachine objref;
-        private List<string> methodNames;
+        private List<string> methodNames = new List<string>();
         private string[] emptyNames = new string[] { "Link behavior script to choose success method." };
 
         SerializedProperty transitionType;
@@ -58,13 +58,14 @@ namespace AtomicTools
             try
             {
                 objref = (ATStateMachine)property.serializedObject.targetObject;
-                methodNames = new List<string>(objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames());
-                methodNames.Insert(0, "None");
+                methodNames = objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames();
+                if (methodNames.Count > 0)
+                    methodNames.Insert(0, "None");
             }
             catch
             {
                 objref = null;
-                methodNames = new List<string>();
+                methodNames.Clear();
             }
 
             // for formatting
@@ -81,45 +82,41 @@ namespace AtomicTools
 
             typestr = transitionType.enumDisplayNames[transitionType.enumValueIndex];
 
-            //if (menuOpen.boolValue)
-            //{
-                //EditorGUI.indentLevel++;
-                // Draw inspector
-                EditorGUILayout.PropertyField(transitionType);
+            EditorGUILayout.PropertyField(transitionType);
 
-                if (transitionType.enumValueIndex == 0) // TriggerEnterTag index
-                    EditorGUILayout.PropertyField(triggerEnterTags);
-                if (transitionType.enumValueIndex == 1) // CollisionTag index
-                    EditorGUILayout.PropertyField(collisionTags);
-                if (transitionType.enumValueIndex == 2) // Timer index
-                    EditorGUILayout.PropertyField(timerLength);
+            if (transitionType.enumValueIndex == 0) // TriggerEnterTag index
+                EditorGUILayout.PropertyField(triggerEnterTags);
+            if (transitionType.enumValueIndex == 1) // CollisionTag index
+                EditorGUILayout.PropertyField(collisionTags);
+            if (transitionType.enumValueIndex == 2) // Timer index
+                EditorGUILayout.PropertyField(timerLength);
 
-                EditorGUILayout.PropertyField(conditionEvaluation);
-                EditorGUILayout.PropertyField(transitionConditions);
-                EditorGUILayout.PropertyField(fromState);
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("To State");
-                EditorGUILayout.PropertyField(toState);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.PropertyField(conditionEvaluation);
+            EditorGUILayout.PropertyField(transitionConditions);
+            EditorGUILayout.PropertyField(fromState);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("To State");
+            EditorGUILayout.PropertyField(toState);
+            EditorGUILayout.EndHorizontal();
 
-                // SUCCESS
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PrefixLabel("Success Method");
-                if (methodNames.Count > 1) // If a valid behavior script exists
-                {
-                    selectedMethod.intValue = EditorGUILayout.Popup(selectedMethod.intValue, methodNames.ToArray());
-                    successMethodName.stringValue = methodNames[selectedMethod.intValue];
-                }
-                else // If no valid behavior script exists
-                {
-                    selectedMethod.intValue = 0;
-                    GUI.enabled = false;
-                    selectedMethod.intValue = EditorGUILayout.Popup(selectedMethod.intValue, emptyNames);
-                    GUI.enabled = true;
-                }
-                EditorGUILayout.EndHorizontal();
-                EditorGUI.indentLevel--;
-            //}
+            // SUCCESS
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Success Method");
+            if (methodNames.Count > 1) // If a valid behavior script exists
+            {
+                selectedMethod.intValue = EditorGUILayout.Popup(selectedMethod.intValue, methodNames.ToArray());
+                successMethodName.stringValue = methodNames[selectedMethod.intValue];
+            }
+            else // If no valid behavior script exists
+            {
+                selectedMethod.intValue = 0;
+                GUI.enabled = false;
+                selectedMethod.intValue = EditorGUILayout.Popup(selectedMethod.intValue, emptyNames);
+                GUI.enabled = true;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel--;
+            
             EditorGUI.EndProperty();
         }
     }
@@ -161,14 +158,15 @@ namespace AtomicTools
             {
                 objref = (ATStateMachine)property.serializedObject.targetObject;
                 methodNames = objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames();
-                methodNames.Insert(0, "None");
+                if(methodNames.Count > 0)
+                    methodNames.Insert(0, "None");
             }
             catch
             {
-                if (methodNames.Count > 0)
-                    methodNames.Clear();
+                objref = null;
+                methodNames.Clear();
             }
-            
+
 
             // Draw inspector
             EditorGUI.PropertyField(typeRect, conditionType);

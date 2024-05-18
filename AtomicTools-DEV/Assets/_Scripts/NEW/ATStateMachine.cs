@@ -281,7 +281,8 @@ namespace AtomicTools
                 var item = i.Current as SerializedProperty;
                 _stateTransitions.Add((ATStateTransition)item.boxedValue);
             }
-        }
 
+            InitializeTransitions();
+        }
     }
 }
