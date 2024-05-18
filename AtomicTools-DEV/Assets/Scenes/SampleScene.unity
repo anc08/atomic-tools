@@ -320,8 +320,9 @@ GameObject:
   - component: {fileID: 1109607350}
   - component: {fileID: 1109607349}
   - component: {fileID: 1109607348}
-  - component: {fileID: 1109607346}
   - component: {fileID: 1109607351}
+  - component: {fileID: 1109607346}
+  - component: {fileID: 1109607352}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -341,13 +342,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd50397ed79dbf46abaf4712db49c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 0}
+  _settings: {fileID: 11400000, guid: f331e332d56442a4f957b0b64a4c277a, type: 2}
   _uniqueBehavior: {fileID: 0}
-  _initTransitionsOnAwake: 0
-  _overrideStartingState: 1
+  _initOnAwake: 1
+  _overrideStartState: 0
   _startingState:
     settings: {fileID: 0}
-    state: 0
+    state: 1
   _stateTransitions: []
   _runTimer: 
 --- !u!23 &1109607348
@@ -451,8 +452,28 @@ MonoBehaviour:
     collisionTags: []
     timerLength: 0
     successMethodName: 
-    menuOpen: 1
+    menuOpen: 0
     selectedMethod: 0
+  condition:
+    conditionType: 0
+    tagsInTrigger: []
+    tagsInCollision: []
+    customComparisonMethod: 
+  state:
+    settings: {fileID: 0}
+    state: 0
+--- !u!114 &1109607352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109607345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edfafd48055b1744380a74681308c5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

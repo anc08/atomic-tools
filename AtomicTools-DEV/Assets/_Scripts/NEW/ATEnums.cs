@@ -6,7 +6,7 @@ using UnityEngine;
  * AtomicTools::ATEnums
  * Author: Adam Cohen
  * https://adamncohen08.wixsite.com/adam-cohen-game-dev
- * Enumerators used in the ATStateMachine modular state machine system.
+ * Extra data used in the ATStateMachine modular state machine system.
  */
 namespace AtomicTools
 {

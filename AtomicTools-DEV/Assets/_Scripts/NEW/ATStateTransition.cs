@@ -58,7 +58,7 @@ namespace AtomicTools
         }
 
         // ONLY FOR EDITOR USAGE
-        public bool menuOpen;
+        //public bool menuOpen;
         public int selectedMethod;
     }
 }

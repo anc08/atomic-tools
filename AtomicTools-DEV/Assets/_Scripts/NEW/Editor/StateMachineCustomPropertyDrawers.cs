@@ -27,7 +27,7 @@ namespace AtomicTools
         SerializedProperty collisionTags;
         SerializedProperty timerLength;
 
-        SerializedProperty menuOpen;
+        //SerializedProperty menuOpen;
         SerializedProperty selectedMethod;
 
         GUIStyle boldFoldout = EditorStyles.foldout;
@@ -46,7 +46,7 @@ namespace AtomicTools
             fromState = property.FindPropertyRelative("fromState");
             toState = property.FindPropertyRelative("toState");
             successMethodName = property.FindPropertyRelative("successMethodName");
-            menuOpen = property.FindPropertyRelative("menuOpen");
+            //menuOpen = property.FindPropertyRelative("menuOpen");
             selectedMethod = property.FindPropertyRelative("selectedMethod");
 
             // Conditional properties
@@ -76,14 +76,14 @@ namespace AtomicTools
             GetProperties(property);
 
             EditorGUI.BeginProperty(position, label, property);
-            menuOpen.boolValue = EditorGUI.Foldout(new Rect(position.x + 3, position.y + 3, position.width - 6, 15), menuOpen.boolValue, typestr + labelstr, boldFoldout);
+            //menuOpen.boolValue = EditorGUI.Foldout(new Rect(position.x + 3, position.y + 3, position.width - 6, 15), menuOpen.boolValue, typestr + labelstr, boldFoldout);
 
 
             typestr = transitionType.enumDisplayNames[transitionType.enumValueIndex];
 
-            if (menuOpen.boolValue)
-            {
-                EditorGUI.indentLevel++;
+            //if (menuOpen.boolValue)
+            //{
+                //EditorGUI.indentLevel++;
                 // Draw inspector
                 EditorGUILayout.PropertyField(transitionType);
 
@@ -97,7 +97,10 @@ namespace AtomicTools
                 EditorGUILayout.PropertyField(conditionEvaluation);
                 EditorGUILayout.PropertyField(transitionConditions);
                 EditorGUILayout.PropertyField(fromState);
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("To State");
                 EditorGUILayout.PropertyField(toState);
+                EditorGUILayout.EndHorizontal();
 
                 // SUCCESS
                 EditorGUILayout.BeginHorizontal();
@@ -116,7 +119,7 @@ namespace AtomicTools
                 }
                 EditorGUILayout.EndHorizontal();
                 EditorGUI.indentLevel--;
-            }
+            //}
             EditorGUI.EndProperty();
         }
     }

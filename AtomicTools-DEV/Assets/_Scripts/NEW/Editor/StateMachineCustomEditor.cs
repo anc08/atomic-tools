@@ -17,8 +17,9 @@ namespace AtomicTools
         SerializedProperty startingState;
         SerializedProperty stateTransitions;
 
-        private string[] emptySettings = new string[] { "Choose a settings asset." };
-        private string[] noStartOverride = new string[] { "Enabled override to choose." };
+        private string[] noStartOverride = new string[] { "Enable override to choose." };
+
+        Rect _rect;
 
         private void OnEnable()
         {
@@ -31,8 +32,8 @@ namespace AtomicTools
         {
             settings = serializedObject.FindProperty("_settings");
             uniqueBehavior = serializedObject.FindProperty("_uniqueBehavior");
-            initOnAwake = serializedObject.FindProperty("_initTransitionsOnAwake");
-            overrideStartingState = serializedObject.FindProperty("_overrideStartingState");
+            initOnAwake = serializedObject.FindProperty("_initOnAwake");
+            overrideStartingState = serializedObject.FindProperty("_overrideStartState");
             startingState = serializedObject.FindProperty("_startingState");
             stateTransitions = serializedObject.FindProperty("_stateTransitions");
         }
@@ -47,34 +48,61 @@ namespace AtomicTools
                 settings_cache = machine.GetSettings();
             }
 
+            EditorGUILayout.Space(1);
+            _rect = GUILayoutUtility.GetLastRect();
+            _rect.x = EditorGUIUtility.labelWidth;
+            _rect.width *= 0.6f;
+
             EditorGUILayout.LabelField("SETTINGS", EditorStyles.boldLabel);
+            EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Settings Asset");
-            EditorGUILayout.ObjectField(settings.objectReferenceValue, typeof(ATStateMachineSettings), false);
+            _rect.height = GUILayoutUtility.GetLastRect().height;
+            _rect.y = GUILayoutUtility.GetLastRect().y;
+            settings.objectReferenceValue = EditorGUI.ObjectField(_rect, settings.objectReferenceValue, typeof(ATStateMachineSettings), false);
             EditorGUILayout.EndHorizontal();
 
             if (settings.objectReferenceValue != null)
             {
-                EditorGUILayout.PropertyField(uniqueBehavior);
+                EditorGUILayout.LabelField("Behavior Script");
+                _rect.height = GUILayoutUtility.GetLastRect().height;
+                _rect.y = GUILayoutUtility.GetLastRect().y;
+                uniqueBehavior.objectReferenceValue = EditorGUI.ObjectField(_rect, uniqueBehavior.objectReferenceValue, typeof(ATStateMachineBehavior), true);
                 EditorGUILayout.PropertyField(initOnAwake);
+                if(initOnAwake.boolValue)
+                {
+                    EditorGUILayout.LabelField("NOTE: Initialization process may be significant in large systems.\nConsider initializing before entering play mode to reduce realtime operations", EditorStyles.wordWrappedMiniLabel);
+                }
                 EditorGUILayout.Space();
+                EditorGUI.indentLevel--;
                 EditorGUILayout.LabelField("STATE MACHINE", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(overrideStartingState);
-                if(overrideStartingState.boolValue)
+                _rect.height = GUILayoutUtility.GetLastRect().height * 1.5f;
+                _rect.y = GUILayoutUtility.GetLastRect().y;
+                _rect.x += _rect.width * 0.1f;
+                _rect.width *= 0.9f;
+                if (overrideStartingState.boolValue)
                 {
-                    //EditorGUI.indentLevel++;
-                    EditorGUILayout.PropertyField(startingState);
-                    //EditorGUI.indentLevel--;
+                    EditorGUI.PropertyField(_rect, startingState);
                 }
                 else
                 {
                     GUI.enabled = false;
-                    EditorGUILayout.Popup(0, noStartOverride);
+                    EditorGUI.Popup(_rect, 0, noStartOverride);
                     GUI.enabled= true;
                 }
                 EditorGUILayout.EndHorizontal();
-                if (GUILayout.Button("Open Transitions Menu")) StateTransitionsWindow.ShowWindow(machine, stateTransitions);
+                
+                EditorGUILayout.Space(30);
+                _rect = GUILayoutUtility.GetLastRect();
+                GUILayoutUtility.GetAspectRect(15f);
+                _rect.y += _rect.height / 2f;
+                _rect.width = 2 * (EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth);
+                
+                if (GUI.Button(_rect, "Open Transition Editor")) StateTransitionsWindow.ShowWindow(machine, stateTransitions);
+                EditorGUI.indentLevel--;
             }
 
             serializedObject.ApplyModifiedProperties();

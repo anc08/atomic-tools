@@ -77,6 +77,7 @@ public class TagSelectorPropertyDrawer : PropertyDrawer
     }
 }
 
+// ATStateDrawer by Adam Cohen
 [CustomPropertyDrawer(typeof(ATState))]
 public class ATStateDrawer : PropertyDrawer
 {
@@ -96,10 +97,7 @@ public class ATStateDrawer : PropertyDrawer
                 settings_cache = settings;
             }
         }
-        catch
-        {
-
-        }
+        catch { }
         state = property.FindPropertyRelative("state");
     }
 
@@ -118,7 +116,6 @@ public class ATStateDrawer : PropertyDrawer
             EditorGUI.LabelField(position, label.text);
             Rect halfpos = new Rect(position.x + position.width / 2, position.y, position.width / 2, position.height);
             state.intValue = EditorGUI.IntField(halfpos, state.intValue);
-            //EditorGUI.PropertyField(position, property);
             EditorGUILayout.EndHorizontal();
         }
     }

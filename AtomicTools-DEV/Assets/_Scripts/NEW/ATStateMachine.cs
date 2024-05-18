@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using System;
+using UnityEditor;
 
 namespace AtomicTools
 {
@@ -11,7 +12,7 @@ namespace AtomicTools
      * Author: Adam Cohen
      * https://adamncohen08.wixsite.com/adam-cohen-game-dev
      * Primary script of a modular state machine system, to be attached to any object that uses the state machine
-     * Dependencies: ATStateTransition.cs, ATTransitionCondition.cs, ATEnums.cs, ATStateMachineBehavior.cs
+     * Dependent on: ATStateTransition.cs, ATTransitionCondition.cs, ATEnums.cs, ATStateMachineBehavior.cs
      */
     [System.Serializable]
     public class ATStateMachine : MonoBehaviour
@@ -19,10 +20,10 @@ namespace AtomicTools
         //[Header("SETTINGS")]
         [SerializeField] private ATStateMachineSettings _settings;
         [Tooltip("All unique behavior methods should be in this script.")][SerializeField] private ATStateMachineBehavior _uniqueBehavior;
-        [Tooltip("If this is checked, the state transitions will automatically re-initialize on awake.")][SerializeField] private bool _initTransitionsOnAwake = true;
+        [Tooltip("If this is checked, the state transitions will automatically re-initialize on awake.")][SerializeField] private bool _initOnAwake = true;
 
         //[Header("State Machine")]
-        [Tooltip("Default starting state is index 0. Check this to use a different starting state.")][SerializeField] private bool _overrideStartingState = false;
+        [Tooltip("Default starting state is index 0. Check this to use a different starting state.")][SerializeField] private bool _overrideStartState = false;
         [Tooltip("The state to start in. Only applies if previous option is checked.")][SerializeField] private ATState _startingState;
         [SerializeField] private List<ATStateTransition> _stateTransitions;
 
@@ -43,9 +44,9 @@ namespace AtomicTools
 
         private void Awake()
         {
-            if (_overrideStartingState)
+            if (_overrideStartState)
                 _state.state = _startingState.state;
-            if (_initTransitionsOnAwake)
+            if (_initOnAwake)
                 InitializeTransitions();
         }
 
@@ -271,9 +272,15 @@ namespace AtomicTools
             return _stateTransitions;
         }
 
-        public void OverwriteTransitionsList(List<ATStateTransition> newlist)
+        public void OverwriteTransitionsList(SerializedProperty property)
         {
-            _stateTransitions = newlist;
+            _stateTransitions.Clear();
+            var i = property.GetEnumerator();
+            while (i.MoveNext())
+            {
+                var item = i.Current as SerializedProperty;
+                _stateTransitions.Add((ATStateTransition)item.boxedValue);
+            }
         }
 
     }
