@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using static UnityEngine.GraphicsBuffer;
-using UnityEditor.UIElements;
 
 namespace AtomicTools
 {
@@ -230,12 +227,12 @@ namespace AtomicTools
         void DrawData()
         {
             GUILayout.BeginArea(datascrollrect);
-            dataScrollPos = GUI.BeginScrollView(datascrollrect, dataScrollPos, datascrollview, false, false, GUIStyle.none, GUI.skin.GetStyle("verticalScrollbar"));
+            //dataScrollPos = GUI.BeginScrollView(datascrollrect, dataScrollPos, datascrollview, false, false, GUIStyle.none, GUI.skin.GetStyle("verticalScrollbar"));
 
             if (selected >= 0)
                 EditorGUILayout.PropertyField(transitionsProperty.GetArrayElementAtIndex(selected));
 
-            GUI.EndScrollView();
+            //GUI.EndScrollView();
             GUILayout.EndArea();
         }
 
@@ -250,7 +247,7 @@ namespace AtomicTools
                 if(sm == null)
                     sm = serializedObject.targetObject as ATStateMachine;
                 sm.OverwriteTransitionsList(transitionsProperty);
-                Debug.Log("SAVE");
+                Debug.Log("TRANSITIONS SAVED: " + serializedObject.targetObject.name);
             }
             Rect b2 = GUILayoutUtility.GetAspectRect(6f);
             if (GUI.Button(b2, "EXIT"))

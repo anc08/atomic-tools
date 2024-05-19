@@ -7,11 +7,6 @@ namespace AtomicTools
     [CustomPropertyDrawer(typeof(ATStateTransition))]
     public class ATStateTransitionDrawer : PropertyDrawer
     {
-        private static float lineHeight = EditorGUIUtility.singleLineHeight;
-
-        string labelstr = " State Transition";
-        string typestr = "[CHOOSE]";
-
         private ATStateMachine objref;
         private List<string> methodNames = new List<string>();
         private string[] emptyNames = new string[] { "Link behavior script to choose success method." };
@@ -27,7 +22,6 @@ namespace AtomicTools
         SerializedProperty collisionTags;
         SerializedProperty timerLength;
 
-        //SerializedProperty menuOpen;
         SerializedProperty selectedMethod;
 
         GUIStyle boldFoldout = EditorStyles.foldout;
@@ -46,7 +40,6 @@ namespace AtomicTools
             fromState = property.FindPropertyRelative("fromState");
             toState = property.FindPropertyRelative("toState");
             successMethodName = property.FindPropertyRelative("successMethodName");
-            //menuOpen = property.FindPropertyRelative("menuOpen");
             selectedMethod = property.FindPropertyRelative("selectedMethod");
 
             // Conditional properties
@@ -77,10 +70,6 @@ namespace AtomicTools
             GetProperties(property);
 
             EditorGUI.BeginProperty(position, label, property);
-            //menuOpen.boolValue = EditorGUI.Foldout(new Rect(position.x + 3, position.y + 3, position.width - 6, 15), menuOpen.boolValue, typestr + labelstr, boldFoldout);
-
-
-            typestr = transitionType.enumDisplayNames[transitionType.enumValueIndex];
 
             EditorGUILayout.PropertyField(transitionType);
 
@@ -120,6 +109,8 @@ namespace AtomicTools
             EditorGUI.EndProperty();
         }
     }
+
+
 
     [CustomPropertyDrawer(typeof(ATTransitionCondition))]
     public class ATTransitionConditionDrawer : PropertyDrawer
@@ -220,6 +211,51 @@ namespace AtomicTools
             }
 
             return lineHeight + lineHeight * extraLines * 1.2f;
+        }
+    }
+
+
+    // ATStateDrawer by Adam Cohen
+    [CustomPropertyDrawer(typeof(ATState))]
+    public class ATStateDrawer : PropertyDrawer
+    {
+        SerializedProperty state;
+        ATStateMachineSettings settings = null;
+        ATStateMachineSettings settings_cache = null;
+        string[] options = null;
+
+        void GetValues(SerializedProperty property)
+        {
+            try
+            {
+                settings = ((ATStateMachine)property.serializedObject.targetObject).GetSettings();
+                if (options == null || settings_cache != settings)
+                {
+                    options = settings.GetStates().ToArray();
+                    settings_cache = settings;
+                }
+            }
+            catch { }
+            state = property.FindPropertyRelative("state");
+        }
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            GetValues(property);
+            if (settings != null && state != null)
+            {
+                EditorGUI.BeginProperty(position, label, property);
+                state.intValue = EditorGUI.Popup(position, state.intValue, options);
+                EditorGUI.EndProperty();
+            }
+            else
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.LabelField(position, label.text);
+                Rect halfpos = new Rect(position.x + position.width / 2, position.y, position.width / 2, position.height);
+                state.intValue = EditorGUI.IntField(halfpos, state.intValue);
+                EditorGUILayout.EndHorizontal();
+            }
         }
     }
 }

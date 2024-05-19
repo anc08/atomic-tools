@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /*
  * AtomicTools::ATEnums
  * Author: Adam Cohen
@@ -36,11 +32,4 @@ namespace AtomicTools
         AnyFalse,
         AllFalse
     };
-
-    [System.Serializable]
-    public struct ATState
-    {
-        public ATStateMachineSettings settings;
-        public int state;
-    }
 }

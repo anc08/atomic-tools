@@ -1,14 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using AtomicTools;
-using NUnit.Framework;
 
 
 //Original by DYLAN ENGELMAN http://jupiterlighthousestudio.com/custom-inspectors-unity/
 //Altered by Brecht Lecluyse https://www.brechtos.com
-[CustomPropertyDrawer(typeof(AtomicTools.TagSelectorAttribute))]
+[CustomPropertyDrawer(typeof(TagSelectorAttribute))]
 public class TagSelectorPropertyDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -17,7 +15,7 @@ public class TagSelectorPropertyDrawer : PropertyDrawer
         {
             EditorGUI.BeginProperty(position, label, property);
  
-            var attrib = this.attribute as AtomicTools.TagSelectorAttribute;
+            var attrib = this.attribute as TagSelectorAttribute;
  
             if (attrib.UseDefaultTagFieldDrawer)
             {
@@ -73,50 +71,6 @@ public class TagSelectorPropertyDrawer : PropertyDrawer
         else
         {
             EditorGUI.PropertyField(position, property, label);
-        }
-    }
-}
-
-// ATStateDrawer by Adam Cohen
-[CustomPropertyDrawer(typeof(ATState))]
-public class ATStateDrawer : PropertyDrawer
-{
-    SerializedProperty state;
-    ATStateMachineSettings settings = null;
-    ATStateMachineSettings settings_cache = null;
-    string[] options = null;
-
-    void GetValues(SerializedProperty property)
-    {
-        try
-        {
-            settings = ((ATStateMachine)property.serializedObject.targetObject).GetSettings();
-            if (options == null || settings_cache != settings)
-            {
-                options = settings.GetStates().ToArray();
-                settings_cache = settings;
-            }
-        }
-        catch { }
-        state = property.FindPropertyRelative("state");
-    }
-
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-    {
-        GetValues(property);
-        if(settings != null && state != null)
-        {
-            EditorGUI.BeginProperty(position, label, property);
-            state.intValue = EditorGUI.Popup(position, state.intValue, options);
-            EditorGUI.EndProperty();
-        }
-        else
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUI.LabelField(position, label.text);
-            Rect halfpos = new Rect(position.x + position.width / 2, position.y, position.width / 2, position.height);
-            state.intValue = EditorGUI.IntField(halfpos, state.intValue);
-            EditorGUILayout.EndHorizontal();
         }
     }
 }

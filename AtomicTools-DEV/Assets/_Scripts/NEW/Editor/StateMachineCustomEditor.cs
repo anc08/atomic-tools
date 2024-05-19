@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using NUnit.Framework;
 
 namespace AtomicTools
 {
@@ -12,7 +11,6 @@ namespace AtomicTools
 
         SerializedProperty settings;
         SerializedProperty uniqueBehavior;
-        SerializedProperty initOnAwake;
         SerializedProperty overrideStartingState;
         SerializedProperty startingState;
         SerializedProperty stateTransitions;
@@ -32,7 +30,6 @@ namespace AtomicTools
         {
             settings = serializedObject.FindProperty("_settings");
             uniqueBehavior = serializedObject.FindProperty("_uniqueBehavior");
-            initOnAwake = serializedObject.FindProperty("_initOnAwake");
             overrideStartingState = serializedObject.FindProperty("_overrideStartState");
             startingState = serializedObject.FindProperty("_startingState");
             stateTransitions = serializedObject.FindProperty("_stateTransitions");
@@ -68,11 +65,6 @@ namespace AtomicTools
                 _rect.height = GUILayoutUtility.GetLastRect().height;
                 _rect.y = GUILayoutUtility.GetLastRect().y;
                 uniqueBehavior.objectReferenceValue = EditorGUI.ObjectField(_rect, uniqueBehavior.objectReferenceValue, typeof(ATStateMachineBehavior), true);
-                EditorGUILayout.PropertyField(initOnAwake);
-                if(initOnAwake.boolValue)
-                {
-                    EditorGUILayout.LabelField("NOTE: Initialization process may be significant in large systems.\nConsider initializing before entering play mode to reduce realtime operations", EditorStyles.wordWrappedMiniLabel);
-                }
                 EditorGUILayout.Space();
                 EditorGUI.indentLevel--;
                 EditorGUILayout.LabelField("STATE MACHINE", EditorStyles.boldLabel);
