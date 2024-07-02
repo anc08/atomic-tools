@@ -108,6 +108,31 @@ namespace AtomicTools
             
             EditorGUI.EndProperty();
         }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            GetProperties(property);
+            float sum = 0;
+            switch (transitionType.enumValueIndex)
+            {
+                case 0:
+                    sum += EditorGUI.GetPropertyHeight(triggerEnterTags);
+                    break;
+                case 1:
+                    sum += EditorGUI.GetPropertyHeight(collisionTags);
+                    break;
+                case 2:
+                    sum += EditorGUI.GetPropertyHeight(timerLength);
+                    break;
+                default:
+                    break;
+            }
+            sum += EditorGUI.GetPropertyHeight(conditionEvaluation);
+            sum += EditorGUI.GetPropertyHeight(transitionConditions);
+            sum += EditorGUI.GetPropertyHeight(fromState);
+            
+            return sum / (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2);
+        }
     }
 
 
@@ -115,7 +140,7 @@ namespace AtomicTools
     [CustomPropertyDrawer(typeof(ATTransitionCondition))]
     public class ATTransitionConditionDrawer : PropertyDrawer
     {
-        private static float lineHeight = EditorGUIUtility.singleLineHeight;
+        private static float lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         private ATStateMachine objref;
         private List<string> methodNames = new List<string>();
@@ -210,7 +235,7 @@ namespace AtomicTools
                 extraLines += 1.5f;
             }
 
-            return lineHeight + lineHeight * extraLines * 1.2f;
+            return lineHeight + lineHeight * extraLines;
         }
     }
 

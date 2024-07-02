@@ -470,44 +470,7 @@ MonoBehaviour:
   _startingState:
     settings: {fileID: 0}
     state: 0
-  _stateTransitions:
-  - transitionType: 0
-    conditionEvaluation: 0
-    transitionConditions: []
-    fromState: []
-    toState:
-      settings: {fileID: 0}
-      state: 0
-    triggerEnterTags: []
-    collisionTags: []
-    timerLength: 0
-    successMethodName: 
-    selectedMethod: 0
-  - transitionType: 0
-    conditionEvaluation: 0
-    transitionConditions: []
-    fromState: []
-    toState:
-      settings: {fileID: 0}
-      state: 0
-    triggerEnterTags: []
-    collisionTags: []
-    timerLength: 0
-    successMethodName: 
-    selectedMethod: 0
-  - transitionType: 0
-    conditionEvaluation: 0
-    transitionConditions: []
-    fromState: []
-    toState:
-      settings: {fileID: 0}
-      state: 0
-    triggerEnterTags: []
-    collisionTags: []
-    timerLength: 0
-    successMethodName: 
-    selectedMethod: 0
-  _runTimer: 
+  _stateTransitions: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -93,7 +93,7 @@ namespace AtomicTools
                 _rect.y += _rect.height / 2f;
                 _rect.width = 2 * (EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth);
                 
-                if (GUI.Button(_rect, "Open Transition Editor")) StateTransitionsWindow.ShowWindow(machine, stateTransitions);
+                if (GUI.Button(_rect, "Open Transition Editor")) StateTransitionsWindow.ShowWindow(machine);
                 EditorGUI.indentLevel--;
             }
 

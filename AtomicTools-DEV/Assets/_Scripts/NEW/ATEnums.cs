@@ -9,10 +9,10 @@ namespace AtomicTools
     // What type of event causes a state transition to trigger
     public enum TransitionType
     {
-        TriggerEnterTag,
-        CollisionTag,
-        Timer,
-        Hook
+        TriggerEnterTag = 0,
+        CollisionTag = 1,
+        Timer = 2,
+        Hook = 3
     };
 
     // Types of transition conditions

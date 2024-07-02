@@ -30,20 +30,25 @@ namespace AtomicTools
         //[Header("State Machine")]
         [Tooltip("Default starting state is index 0. Check this to use a different starting state.")][SerializeField] private bool _overrideStartState = false;
         [Tooltip("The state to start in. Only applies if previous option is checked.")][SerializeField] private ATState _startingState;
-        [SerializeField] private List<ATStateTransition> _stateTransitions;
+        [SerializeField] private List<ATStateTransition> _stateTransitions = new List<ATStateTransition>();
 
         // State tracking
         private ATState _state = new ATState();
         private List<string> _behaviorMethods;
         private List<int> _triggerEnterTransitions = new List<int>();
         private List<int> _collisionTransitions = new List<int>();
-        private List<List<int>> _timerTransitions = new List<List<int>>(); // NEEDS TO BE CHECKED
+        Dictionary<int, List<int>> _timerTransitions = new Dictionary<int, List<int>>(); // NEEDS TO BE CHECKED
         List<Collider> _objectsInTrigger = new List<Collider>();    // MAKE INIT AUTO CREATE A LAYER MASK FOR TRIGGER DETECTIONS
         List<Collision> _objectsInCollision = new List<Collision>();
 
         // Private helper fields
         float _stateTimer;
-        public List<bool> _runTimer = new List<bool>();
+        public Dictionary<int, bool> _runTimer = new Dictionary<int, bool>();
+
+        // Fields for user interaction
+        private bool _timersPaused = false;
+        delegate void AlertSwitchSubscribers(int state);
+        AlertSwitchSubscribers alertSwitchSubscribers;
 
         /*  STARTUP FUNCTIONS  */
 
@@ -55,7 +60,7 @@ namespace AtomicTools
 
         void Update()
         {
-            if (_runTimer[_state.state])
+            if (!_timersPaused && _runTimer[_state.state])
                 UpdateStateTimer(_state.state);
         }
 
@@ -63,8 +68,7 @@ namespace AtomicTools
         {
             _triggerEnterTransitions.Clear();
             _collisionTransitions.Clear();
-            foreach (List<int> list in _timerTransitions)
-                list.Clear();
+            _timerTransitions.Clear();
 
             for (int i = 0; i < _stateTransitions.Count; i++)
             {
@@ -79,7 +83,10 @@ namespace AtomicTools
                         break;
                     case TransitionType.Timer:
                         foreach (ATState frm in _stateTransitions[i].fromState)
+                        {
                             _timerTransitions[frm.state].Add(i);   // [TODO] REDO THIS
+                            _runTimer[frm.state] = true;
+                        }
                         break;
                     default:
                         Debug.LogError("Transition index " + i + ": invalid transition type");
@@ -273,7 +280,7 @@ namespace AtomicTools
 
         public List<ATStateTransition> GetTransitionsList()
         {
-            return _stateTransitions;
+            return new List<ATStateTransition>(_stateTransitions);
         }
 
         public void OverwriteTransitionsList(SerializedProperty property)
@@ -287,6 +294,23 @@ namespace AtomicTools
             }
 
             InitializeTransitions();
+        }
+
+
+        /* User Interface Functions */
+        public void PauseTimers()
+        {
+            _timersPaused = true;
+        }
+
+        public void UnpauseTimers()
+        {
+            _timersPaused = false;
+        }
+
+        public void SubscribeToStateUpdates()
+        {
+
         }
     }
 }

@@ -364,6 +364,7 @@
 "Assets/_Scripts/NEW/ATStateMachineSettings.cs"
 "Assets/_Scripts/NEW/ATStateTransition.cs"
 "Assets/_Scripts/NEW/ATTransitionCondition.cs"
+"Assets/_Scripts/NEW/OLD_Editor/ATTransitionsEditorWindow.cs"
 "Assets/_Scripts/Tools/AVarDelegate.cs"
 "Assets/_Scripts/Tools/EditorMethodTest.cs"
 "Assets/_Scripts/Tools/ScaledScreenshotTool.cs"

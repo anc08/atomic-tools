@@ -15,8 +15,8 @@ namespace AtomicTools
         private static string[] listnames = { "Trigger Enter Transition", "Collision Enter Transition", "Timer Transition", "Hook Transition" };
 
         private static SerializedProperty transitionsProperty;
-        private static SerializedObject serializedObject;
-        private SerializedProperty objProperty;
+        private static SerializedObject serializedObject = null;
+        private static SerializedProperty objProperty;
         private static StateTransitionsWindow window = null;
         List<string> transitionNames = new List<string>();
 
@@ -45,7 +45,7 @@ namespace AtomicTools
 
         int selected = -1;
 
-        public static void ShowWindow(ATStateMachine machine, SerializedProperty property)
+        public static void ShowWindow(ATStateMachine machine)
         {
             if (listStyle == null || selectedStyle == null)
             {
@@ -55,11 +55,12 @@ namespace AtomicTools
             window = GetWindow<StateTransitionsWindow>("Transition Editor");
             window.minSize = new Vector2(600, 300);
             serializedObject = new SerializedObject(machine as Object);
+            GetData();
         }
 
         void OnEnable()
         {
-            
+            GetData();
         }
 
         private void OnDisable()
@@ -95,19 +96,22 @@ namespace AtomicTools
             DrawLayouts();
             try
             {
-                GetData();
-                DrawList();
-                DrawListButtons();
-                DrawData();
-                DrawButtons();
+                //GetData();          // get transitions list
+                DrawList();         // buttons to select which element of the list is being edited
+                DrawListButtons();  // add/remove, move up/down buttons
+                DrawData();         // display currently selected transition
+                DrawButtons();      // save/exit buttons
             }
             catch { Close(); }
         }
 
-        void GetData()
+        static void GetData()
         {
-            objProperty = serializedObject.FindProperty("_stateTransitions");
-            transitionsProperty = objProperty.Copy();
+            if (serializedObject != null)
+            {
+                objProperty = serializedObject.FindProperty("_stateTransitions");
+                transitionsProperty = objProperty.Copy();
+            }
         }
 
         void DrawLayouts()
@@ -115,43 +119,52 @@ namespace AtomicTools
             if(window == null) { Close(); return; }
             windowpos = window.position;
 
-            listview.width = EditorGUIUtility.currentViewWidth * 0.35f;
+            // overall box for left side column
+            listview.width = EditorGUIUtility.currentViewWidth * 0.35f; 
             listview.height = windowpos.height - 90;
             listview.x = 0;
             listview.y = 0;
 
-
-            float dif = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+            // available scrollview rect for list column
+            float singleLine = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             listscrollrect.width = listview.width;
-            listscrollrect.height = listview.height - dif;
+            listscrollrect.height = listview.height - singleLine;
             listscrollrect.x = listview.x;
-            listscrollrect.y = dif;
+            listscrollrect.y = singleLine;
 
+            // actual needed area for list column
             listscrollview.width = listview.width;
-            listscrollview.height = transitionNames.Count * dif;
+            listscrollview.height = transitionNames.Count * singleLine;
             listscrollview.x = 0;
-            listscrollview.y = dif;
+            listscrollview.y = singleLine;
 
+            // box for Add/Delete/Move up/down buttons
             listbuttonsview.width = listview.width;
             listbuttonsview.height = 40;
             listbuttonsview.x = 0;
             listbuttonsview.y = windowpos.height - 90;
 
-            dataview.width = EditorGUIUtility.currentViewWidth * 0.65f;
+            dataview.width = EditorGUIUtility.currentViewWidth * 0.63f;
             dataview.height = windowpos.height - 50;
-            dataview.x = EditorGUIUtility.currentViewWidth * 0.35f;
-            dataview.y = 0;
+            dataview.x = listview.x + listview.width;
+            dataview.y = listview.y;
 
-            datascrollrect.width = EditorGUIUtility.currentViewWidth * 0.6f;
-            datascrollrect.height = dataview.height - dif;
-            datascrollrect.x = EditorGUIUtility.currentViewWidth * 0.375f;
+            // available scrollview rect for data column
+            //datascrollrect.width = EditorGUIUtility.currentViewWidth * 0.6f;
+            datascrollrect.width = dataview.width;
+            datascrollrect.height = dataview.height - singleLine;
+            //datascrollrect.x = EditorGUIUtility.currentViewWidth * 0.375f;
+            datascrollrect.x = 0;
             datascrollrect.y = 0;
 
-            datascrollview.width = datascrollrect.width;
-            datascrollview.height = selected >= 0 ? EditorGUI.GetPropertyHeight(transitionsProperty.GetArrayElementAtIndex(selected)) : 0;
+            // needed area for data column
+            datascrollview.width = dataview.width;
+            datascrollview.height = selected >= 0 ? EditorGUI.GetPropertyHeight(transitionsProperty.GetArrayElementAtIndex(selected), true) * singleLine * 1.5f : 0;
+            Debug.Log("HEIGHT: " + datascrollview.height + " / " + datascrollrect.height);
             datascrollview.x = datascrollrect.x;
             datascrollview.y = 0;
 
+            // bottom bar for Save/Exit buttons
             buttonsview.width = EditorGUIUtility.currentViewWidth;
             buttonsview.height = 50 - EditorGUIUtility.standardVerticalSpacing;
             buttonsview.x = 0;
@@ -226,13 +239,15 @@ namespace AtomicTools
 
         void DrawData()
         {
-            GUILayout.BeginArea(datascrollrect);
-            //dataScrollPos = GUI.BeginScrollView(datascrollrect, dataScrollPos, datascrollview, false, false, GUIStyle.none, GUI.skin.GetStyle("verticalScrollbar"));
-
+            //Debug.Log("view height: " + datascrollrect.height + "\nneeded height: " + datascrollview.height);
+            //Debug.Log(dataview + "\n" + datascrollview + "\n" + datascrollrect + "\n");
+            GUILayout.BeginArea(dataview);
+            dataScrollPos = GUI.BeginScrollView(datascrollrect, dataScrollPos, datascrollview, false, false, GUIStyle.none, GUI.skin.GetStyle("verticalScrollbar"));
+            EditorGUI.indentLevel++;
             if (selected >= 0)
                 EditorGUILayout.PropertyField(transitionsProperty.GetArrayElementAtIndex(selected));
-
-            //GUI.EndScrollView();
+            EditorGUI.indentLevel--;
+            GUI.EndScrollView();
             GUILayout.EndArea();
         }
 

@@ -10,7 +10,7 @@ namespace AtomicTools
      * https://adamncohen08.wixsite.com/adam-cohen-game-dev
      * Scriptable object that defines the states within a state machine.
      */
-    [CreateAssetMenu]
+    [CreateAssetMenu(menuName = "AtomicTools/State Machine Settings Asset")]
     public class ATStateMachineSettings : ScriptableObject
     {
         [SerializeField] private List<string> _states = new List<string>();
