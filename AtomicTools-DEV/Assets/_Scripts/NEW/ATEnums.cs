@@ -12,7 +12,7 @@ namespace AtomicTools
         TriggerEnterTag = 0,
         CollisionTag = 1,
         Timer = 2,
-        Hook = 3
+        CallID = 3
     };
 
     // Types of transition conditions

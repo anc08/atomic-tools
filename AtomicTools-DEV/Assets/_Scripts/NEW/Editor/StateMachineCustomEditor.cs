@@ -92,8 +92,12 @@ namespace AtomicTools
                 GUILayoutUtility.GetAspectRect(15f);
                 _rect.y += _rect.height / 2f;
                 _rect.width = 2 * (EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth);
-                
-                if (GUI.Button(_rect, "Open Transition Editor")) StateTransitionsWindow.ShowWindow(machine);
+
+                if (GUI.Button(_rect, "Open Transition Editor"))
+                {
+                    machine.DefineMethodNames();
+                    StateTransitionsWindow.ShowWindow(machine);
+                }
                 EditorGUI.indentLevel--;
             }
 

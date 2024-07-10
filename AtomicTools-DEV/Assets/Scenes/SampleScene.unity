@@ -320,7 +320,6 @@ GameObject:
   - component: {fileID: 1109607350}
   - component: {fileID: 1109607349}
   - component: {fileID: 1109607348}
-  - component: {fileID: 1109607351}
   - component: {fileID: 1109607352}
   - component: {fileID: 1109607353}
   m_Layer: 0
@@ -395,51 +394,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1109607351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109607345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8af7299c52104cc448fe3908fff5e333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  transition:
-    transitionType: 0
-    conditionEvaluation: 0
-    transitionConditions:
-    - conditionType: 1
-      tagsInTrigger: []
-      tagsInCollision: []
-      customComparisonMethod: 
-    - conditionType: 3
-      tagsInTrigger: []
-      tagsInCollision: []
-      customComparisonMethod: 
-    fromState:
-    - settings: {fileID: 0}
-      state: 0
-    - settings: {fileID: 0}
-      state: 0
-    toState:
-      settings: {fileID: 0}
-      state: 0
-    triggerEnterTags: []
-    collisionTags: []
-    timerLength: 0
-    successMethodName: 
-    selectedMethod: 0
-  condition:
-    conditionType: 0
-    tagsInTrigger: []
-    tagsInCollision: []
-    customComparisonMethod: 
-  state:
-    settings: {fileID: 0}
-    state: 0
 --- !u!114 &1109607352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,13 +418,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd50397ed79dbf46abaf4712db49c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 11400000, guid: f331e332d56442a4f957b0b64a4c277a, type: 2}
-  _uniqueBehavior: {fileID: 0}
-  _overrideStartState: 0
+  _settings: {fileID: 11400000, guid: 77bb9cfad42776f4ca71e40461518db0, type: 2}
+  _uniqueBehavior: {fileID: 1109607352}
+  _overrideStartState: 1
   _startingState:
     settings: {fileID: 0}
-    state: 0
-  _stateTransitions: []
+    state: 2
+  _stateTransitions:
+  - transitionType: 3
+    conditionEvaluation: 0
+    transitionConditions: []
+    fromState: []
+    toState:
+      settings: {fileID: 0}
+      state: 0
+    triggerEnterTags: []
+    collisionTags: []
+    timerLength: 0
+    callId: whats up
+    successMethodName: None
+    selectedMethod: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

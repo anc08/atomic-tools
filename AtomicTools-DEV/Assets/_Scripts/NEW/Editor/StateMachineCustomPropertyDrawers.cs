@@ -21,6 +21,7 @@ namespace AtomicTools
         SerializedProperty triggerEnterTags;
         SerializedProperty collisionTags;
         SerializedProperty timerLength;
+        SerializedProperty callId;
 
         SerializedProperty selectedMethod;
 
@@ -46,6 +47,7 @@ namespace AtomicTools
             triggerEnterTags = property.FindPropertyRelative("triggerEnterTags");
             collisionTags = property.FindPropertyRelative("collisionTags");
             timerLength = property.FindPropertyRelative("timerLength");
+            callId = property.FindPropertyRelative("callId");
 
             // Get names of behavior methods
             try
@@ -79,6 +81,8 @@ namespace AtomicTools
                 EditorGUILayout.PropertyField(collisionTags);
             if (transitionType.enumValueIndex == 2) // Timer index
                 EditorGUILayout.PropertyField(timerLength);
+            if (transitionType.enumValueIndex == 3) // CallID index
+                EditorGUILayout.PropertyField(callId);
 
             EditorGUILayout.PropertyField(conditionEvaluation);
             EditorGUILayout.PropertyField(transitionConditions);
@@ -123,6 +127,9 @@ namespace AtomicTools
                     break;
                 case 2:
                     sum += EditorGUI.GetPropertyHeight(timerLength);
+                    break;
+                case 3:
+                    sum += EditorGUI.GetPropertyHeight(callId);
                     break;
                 default:
                     break;
@@ -169,12 +176,12 @@ namespace AtomicTools
             tagsInCollision = property.FindPropertyRelative("tagsInCollision");
             customComparison = property.FindPropertyRelative("customComparisonMethod");
 
-            // Get behavior method names
+            // Get comparison method names
             try
             {
                 objref = (ATStateMachine)property.serializedObject.targetObject;
-                methodNames = objref.GetComponent<ATStateMachine>().GetBehaviorMethodNames();
-                if(methodNames.Count > 0)
+                methodNames = objref.GetComponent<ATStateMachine>().GetComparisonMethodNames();
+                if (methodNames.Count > 0)
                     methodNames.Insert(0, "None");
             }
             catch

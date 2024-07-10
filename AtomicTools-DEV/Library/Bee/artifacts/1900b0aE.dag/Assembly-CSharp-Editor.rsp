@@ -376,7 +376,6 @@
 "Assets/_Scripts/NEW/Editor/StateMachineCustomEditor.cs"
 "Assets/_Scripts/NEW/Editor/StateMachineCustomPropertyDrawers.cs"
 "Assets/_Scripts/NEW/Editor/StateTransitionsWindow.cs"
-"Assets/_Scripts/NEW/Editor/WarningWindow.cs"
 "Assets/_Scripts/Tools/Editor/AVarDelegateCustomEditor.cs"
 "Assets/_Scripts/Tools/Editor/DeathCauseCustomEditor.cs"
 "Assets/_Scripts/Tools/Editor/EditorList.cs"

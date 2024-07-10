@@ -12,7 +12,7 @@ namespace AtomicTools
      */
     public class StateTransitionsWindow : EditorWindow
     {
-        private static string[] listnames = { "Trigger Enter Transition", "Collision Enter Transition", "Timer Transition", "Hook Transition" };
+        private static string[] listnames = { "Trigger Enter Transition", "Collision Enter Transition", "Timer Transition", "Call ID Transition" };
 
         private static SerializedProperty transitionsProperty;
         private static SerializedObject serializedObject = null;
@@ -144,24 +144,21 @@ namespace AtomicTools
             listbuttonsview.x = 0;
             listbuttonsview.y = windowpos.height - 90;
 
-            dataview.width = EditorGUIUtility.currentViewWidth * 0.63f;
+            dataview.width = EditorGUIUtility.currentViewWidth * 0.67f;
             dataview.height = windowpos.height - 50;
             dataview.x = listview.x + listview.width;
             dataview.y = listview.y;
 
             // available scrollview rect for data column
-            //datascrollrect.width = EditorGUIUtility.currentViewWidth * 0.6f;
-            datascrollrect.width = dataview.width;
+            datascrollrect.width = dataview.width * 0.95f;
             datascrollrect.height = dataview.height - singleLine;
-            //datascrollrect.x = EditorGUIUtility.currentViewWidth * 0.375f;
-            datascrollrect.x = 0;
+            datascrollrect.x = 10;
             datascrollrect.y = 0;
 
             // needed area for data column
-            datascrollview.width = dataview.width;
+            datascrollview.width = dataview.width * 0.9f;
             datascrollview.height = selected >= 0 ? EditorGUI.GetPropertyHeight(transitionsProperty.GetArrayElementAtIndex(selected), true) * singleLine * 1.5f : 0;
-            Debug.Log("HEIGHT: " + datascrollview.height + " / " + datascrollrect.height);
-            datascrollview.x = datascrollrect.x;
+            datascrollview.x = 0;
             datascrollview.y = 0;
 
             // bottom bar for Save/Exit buttons
@@ -239,14 +236,16 @@ namespace AtomicTools
 
         void DrawData()
         {
-            //Debug.Log("view height: " + datascrollrect.height + "\nneeded height: " + datascrollview.height);
-            //Debug.Log(dataview + "\n" + datascrollview + "\n" + datascrollrect + "\n");
             GUILayout.BeginArea(dataview);
             dataScrollPos = GUI.BeginScrollView(datascrollrect, dataScrollPos, datascrollview, false, false, GUIStyle.none, GUI.skin.GetStyle("verticalScrollbar"));
-            EditorGUI.indentLevel++;
             if (selected >= 0)
+            {
+                Rect area = new Rect(datascrollview);
+                area.height = datascrollrect.height;
+                GUILayout.BeginArea(area);
                 EditorGUILayout.PropertyField(transitionsProperty.GetArrayElementAtIndex(selected));
-            EditorGUI.indentLevel--;
+                GUILayout.EndArea();
+            }
             GUI.EndScrollView();
             GUILayout.EndArea();
         }
